@@ -2,8 +2,10 @@
 
 on:
   schedule:
-    # 每 10 分钟：云端定时调用 HPM 仓库的 workflow_dispatch
+    # 高频：每 10 分钟（用于尽快验证）
     - cron: '*/10 * * * *'
+    # 低频对照：每天 UTC 18:00（北京时间 02:00），用于验证高频是否被调度器丢弃
+    - cron: '0 18 * * *'
   workflow_dispatch:
 
 permissions:
@@ -24,6 +26,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "UTC: $(date -u --iso-8601=seconds)"
+          echo "schedule: ${{ github.event.schedule }}"
           status=$(curl -sS -o /tmp/body.txt -w '%{http_code}' -X POST \
             -H "Authorization: Bearer ${HPM_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
