@@ -3,7 +3,7 @@
 on:
   schedule:
     # 高频：每 10 分钟（用于尽快验证）
-    - cron: '*/10 * * * *'
+    - cron: '*/5 * * * *'
     # 低频对照：每天 UTC 18:00（北京时间 02:00），用于验证高频是否被调度器丢弃
     - cron: '0 18 * * *'
   workflow_dispatch:
@@ -37,3 +37,4 @@ jobs:
           echo "HTTP ${status}"
           cat /tmp/body.txt || true
           test "${status}" = "204"
+
